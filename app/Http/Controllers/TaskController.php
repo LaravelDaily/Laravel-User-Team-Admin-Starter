@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
-use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use Symfony\Component\HttpFoundation\Response;
+use App\Models\Task;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
@@ -38,15 +37,11 @@ class TaskController extends Controller
 
     public function edit(Task $task): View
     {
-        abort_if($task->team_id !== auth()->user()->team_id, Response::HTTP_FORBIDDEN);
-
         return view('tasks.edit', compact('task'));
     }
 
     public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
     {
-        abort_if($task->team_id !== auth()->user()->team_id, Response::HTTP_FORBIDDEN);
-
         $task->update($request->validated());
 
         return redirect()->route('tasks.index')->with('status', 'Task updated.');
@@ -54,8 +49,6 @@ class TaskController extends Controller
 
     public function destroy(Task $task): RedirectResponse
     {
-        abort_if($task->team_id !== auth()->user()->team_id, Response::HTTP_FORBIDDEN);
-
         $task->delete();
 
         return redirect()->route('tasks.index')->with('status', 'Task deleted.');
